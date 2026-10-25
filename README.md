@@ -104,7 +104,14 @@ Read what is there before changing anything:
 
 ## How it was set up
 
-In order, which is also how to rebuild it:
+**DONE 25 October 2026, and live over HTTPS.** The repository `therealcreynold/duoalley-website` was
+created public and pushed; Pages was enabled from `main` at the root with the custom domain
+`duoalley.com`; the nine DNS records were set at Namecheap the same day; GitHub's certificate reached
+`approved` (covering `duoalley.com` and `www.duoalley.com`) within minutes and `https_enforced` was set;
+`scripts/check-live.sh` then printed 16 PASS and "clean". (Run in the first minute after the certificate
+was approved, it failed twice, on `www` and on one connection, while the certificate reached GitHub's
+edge; a minute later it was clean. Give it that minute before believing a failure.) The steps stay
+because they are how the site gets rebuilt. Read what is there before redoing anything. In order:
 
 1. **The repository** `therealcreynold/duoalley-website`, **public** (GitHub Pages on a free account
    serves only public repositories), created empty and pushed from `main`.
