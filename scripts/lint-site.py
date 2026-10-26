@@ -45,11 +45,14 @@ touches the network. What it fails on, and why each one is here:
   _config.yml (its exclude list is NOT_PUBLISHED below, exactly); and no .nojekyll.
 
   THE GAME REPOSITORY, when it sits beside this one (../duoalley; each check is SKIPPED, and says so,
-  when the file it needs is not there):
+  when the file it needs is not there; with --require-game every SKIP is a FAIL, which is how a release
+  is gated):
   - privacy/index.html against docs/PRIVACY-POLICY.md, WORD FOR WORD: the policy is that file's text
     and only that file's text, compared the way the game's Scripts/preflight-release.sh compares the
-    served page.
-  - the icons against the game's committed app/DuoAlley/AppIcon.icon: scripts/icon-source.txt records
+    served page. Neither normaliser strips Markdown link syntax, so the policy writes link text as plain
+    words, and a Markdown link in it is a FAIL here.
+  - the icons against the game's committed app/DuoAlley/AppIcon.icon (the blobs at HEAD, read through
+    git, never the working tree): scripts/icon-source.txt records
     the files scripts/make-icons.sh drew from, and a difference means the site shows an icon the game
     no longer has. Run scripts/make-icons.sh.
   - the privacy URL compiled into the app (MoneyLinks.privacyPolicy) and the Support and Marketing
@@ -404,6 +407,11 @@ def check_policy(problems: list[str], notes: list[str]) -> None:
                      "(privacy/index.html is a draft from the build; the game's Assets row reconciles)")
         return
     md = source.read_text(encoding="utf-8")
+    # Neither this lint nor the game's preflight-release.sh (policy_verdict) strips Markdown link syntax,
+    # and the two normalisers must stay identical, so the policy writes link text as plain words.
+    for link in re.findall(r"\[[^\]\n]+\]\([^)\n]+\)|<https?://[^>\s]+>", md):
+        problems.append(f"docs/PRIVACY-POLICY.md has Markdown link syntax {link!r}: write the link text as "
+                        "plain words (and a bare URL as itself), as privacy/index.html shows it")
     md = re.sub(r"<!--.*?-->", "", md, flags=re.S)            # the file's own note to the reader
     md = re.sub(r"^#+\s*", "", md, flags=re.M)                # headings
     md = re.sub(r"^\s*-\s+", "", md, flags=re.M)              # list markers
@@ -425,28 +433,39 @@ def check_policy(problems: list[str], notes: list[str]) -> None:
 
 
 def check_icon_source(problems: list[str], notes: list[str]) -> None:
-    icon = GAME / "app" / "DuoAlley" / "AppIcon.icon"
+    rel = "app/DuoAlley/AppIcon.icon"
     record = ROOT / "scripts" / "icon-source.txt"
     if not record.is_file():
         problems.append("scripts/icon-source.txt is missing: run scripts/make-icons.sh")
         return
-    if not (icon / "icon.json").is_file():
-        notes.append(f"SKIP the icons against the game's AppIcon.icon: {icon} is not here")
+    if not (GAME / rel / "icon.json").is_file():
+        notes.append(f"SKIP the icons against the game's AppIcon.icon: {GAME / rel} is not here")
         return
     recorded = {}
     for line in record.read_text().splitlines():
         if line.strip() and not line.startswith("#"):
             digest, name = line.split(None, 1)
             recorded[name.strip()] = digest
-    current = {"icon.json": hashlib.sha256((icon / "icon.json").read_bytes()).hexdigest()}
-    for path in sorted((icon / "Assets").glob("*.png")):
-        current[f"Assets/{path.name}"] = hashlib.sha256(path.read_bytes()).hexdigest()
+    # The COMMITTED icon: the blobs at HEAD, never the working tree, so an uncommitted icon cannot pass.
+    def git(*args: str) -> bytes:
+        return subprocess.run(["git", "-C", str(GAME), *args], check=True, capture_output=True).stdout
+    try:
+        names = [n for n in git("ls-tree", "-r", "--name-only", "HEAD", "--", rel).decode().splitlines()
+                 if n == f"{rel}/icon.json" or (n.startswith(f"{rel}/Assets/") and n.endswith(".png")
+                                                and "/" not in n[len(f"{rel}/Assets/"):])]
+        current = {n[len(rel) + 1:]: hashlib.sha256(git("show", f"HEAD:{n}")).hexdigest() for n in names}
+        dirty = git("status", "--porcelain", "--untracked-files=all", "--", rel).decode().strip()
+    except (OSError, subprocess.CalledProcessError) as error:
+        problems.append(f"cannot read the game's committed AppIcon.icon from git: {error}")
+        return
+    if dirty:
+        notes.append(f"the game's {rel} has uncommitted changes; compared against HEAD, which is what ships")
     if recorded != current:
         changed = sorted(k for k in set(recorded) | set(current) if recorded.get(k) != current.get(k))
-        problems.append("the site's icons were drawn from an AppIcon.icon the game no longer has "
+        problems.append("the site's icons were drawn from an AppIcon.icon the game has not committed "
                         f"({', '.join(changed)}): run scripts/make-icons.sh, look, and commit")
     else:
-        notes.append("the icons were drawn from the game's committed AppIcon.icon")
+        notes.append("the icons were drawn from the game's committed AppIcon.icon (HEAD)")
 
 
 def check_game_urls(problems: list[str], notes: list[str]) -> None:
@@ -535,6 +554,9 @@ def main() -> int:
     check_policy(problems, notes)
     check_icon_source(problems, notes)
     check_game_urls(problems, notes)
+    if "--require-game" in sys.argv:
+        # Release gating: a missing game repository is a failure, never a skipped comparison.
+        problems.extend(f"--require-game: {n}" for n in notes if n.startswith("SKIP"))
     for n in notes:
         print(f"NOTE {n}")
     for p in problems:

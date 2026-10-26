@@ -1,30 +1,10 @@
 # app-ads.txt for duoalley.com
 #
-# Advertising networks crawl this file to confirm that whoever is selling advertising inside Duo Alley
-# is allowed to. Without a verified file the better-paying programmatic demand does not bid, and an
-# unverified file means limited serving rather than merely lower prices.
-#
-# THE GOOGLE LINE BELOW IS THE PUBLISHER ACCOUNT'S, NOT THE APP'S. app-ads.txt authorises a seller
-# account, and every game this developer publishes sells through the same AdMob publisher account,
-# pub-5706069574815967, with Google's certification authority id f08c47fec0942fa0. The Duo Alley AdMob
-# app does not exist yet (the game's owner-open O7). Once it is created under that account and linked
-# to the live store listing, open AdMob's own "Set up app-ads.txt" dialog for it and confirm the line
-# below matches byte for byte; if it ever differs, the dialog wins.
-#
-# Do not type a seller line, and do not guess one: a wrong DIRECT line authorises a seller that is not
-# used, which is worse than a missing one, because it looks verified and is not. The same rule holds
-# for every other network: Duo Alley ships on Google AdMob alone, with no mediation and no partner
-# bidding, so add another network's lines only when that network is genuinely enabled in the shipping
-# build, pasted from that network's own dashboard.
-#
-# Serving requirements, which are not negotiable: the root of the domain set as the App Store Connect
-# Marketing URL, text/plain, HTTP 200, no redirect to anywhere else. The crawl walks from the store
-# listing to the domain, so it cannot begin until both the listing and this site are live. Allow about
-# 24 hours after that.
+# Advertising networks crawl this file to confirm who is authorised to sell advertising inside
+# Duo Alley. The Google line names the publisher account that sells it, with Google's certification
+# authority id. Duo Alley uses Google AdMob alone, with no mediation, so there is no other line.
 
-# The IAB variable naming the business that owns this inventory. It has to be the domain set as the
-# App Store Connect Marketing URL, because that link is the path every crawler walks to get here: the
-# apex, https://duoalley.com, with no scheme and no path.
+# The business that owns this inventory: the domain set as the App Store Connect Marketing URL.
 OWNERDOMAIN=duoalley.com
 
 google.com, pub-5706069574815967, DIRECT, f08c47fec0942fa0

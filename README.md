@@ -75,8 +75,22 @@ share card, and the Google Mobile Ads and UMP SDKs' own disclosures.
 When `docs/PRIVACY-POLICY.md` lands, either it is written from this page or this page is rewritten to
 it; from then on `scripts/lint-site.py` compares the two **word for word** (headings, list markers,
 bold and backticks stripped, as the game's `Scripts/preflight-release.sh` compares the served page) and
-fails on any difference. To change the policy after that: the game's file first, then this page, then
-push, then archive.
+fails on any difference. **Neither normaliser strips Markdown link syntax**, so the `.md` writes link
+text as plain words ("Apple's privacy policy", a bare URL as itself), exactly as the page shows it; the
+lint fails on a `[text](url)` or `<https://...>` in the policy. To change the policy after that: the
+game's file first, then this page, then push, then archive.
+
+Two things the page now says that the policy must keep: the only thing that reaches us is an email a
+player chooses to send (Email support, Report an ad, or the address on this site), kept only until it is
+dealt with; and the American states' opt-out is described as Google's Privacy options row **where
+Google's consent software shows it**, because the game draws that row only when UMP says it is required
+(`Advertising.swift`, `rememberPrivacyOptions` and `adoptPrivacyEvidence`), which for the US states
+needs the US states message published in AdMob (part of the game's O7).
+
+For release gating run the lint beside the game repository with `--require-game`, which turns every
+SKIP (a missing policy, icon or listing) into a FAIL:
+
+    python3 scripts/lint-site.py --require-game
 
 ## The icon, and the one command that redraws it
 
@@ -89,7 +103,9 @@ this site is drawn from **whatever `app/DuoAlley/AppIcon.icon` the game has comm
 It reads `icon.json` for the fill colour and the layer order, stacks the light appearance's full-frame
 layers (backdrop, plate, ramp, ball) on that fill with headless Brave, scales them with sips, drops the
 alpha channel, and writes `assets/icon-{32,96,180,512}.png` plus `scripts/icon-source.txt`, the SHA-256
-of every file it read. Icon Composer's glass and drop shadows are not drawn: what comes out is the flat
+of every file it read. It refuses while `AppIcon.icon` has uncommitted changes in the game repository
+(edited, staged or untracked), and the lint hashes the **HEAD** blobs through git, never the working
+tree, so an icon nobody has committed can neither be drawn nor pass. Icon Composer's glass and drop shadows are not drawn: what comes out is the flat
 artwork. `scripts/lint-site.py` fails while the game's committed `AppIcon.icon` differs from the files
 recorded in `scripts/icon-source.txt`, so after the owner picks and the game commits the new icon:
 
@@ -156,6 +172,12 @@ Nothing here is pushed by an agent. To publish what is committed:
 Until that push the live site is still the holding page, and `scripts/check-live.sh` fails on the
 pages, `app-ads.txt` and the icons it cannot find (17 FAIL and 17 PASS on 26 October 2026, against the
 holding page). After it, every line should be PASS.
+
+Once the AdMob app exists (the game's O7) and is linked to the live store listing, open AdMob's own
+"Set up app-ads.txt" dialog for it and confirm the Google line in `app-ads.txt` matches byte for byte;
+if it ever differs, the dialog wins. Never type or guess a seller line, and add another network's lines
+only when that network is enabled in the shipping build, pasted from its own dashboard. Crawling starts
+from the store listing's Marketing URL, so allow about 24 hours after both are live.
 
 ## The DNS
 

@@ -32,6 +32,12 @@ SITE="$(cd "$(dirname "$0")/.." && pwd)"
 GAME="$(cd "${1:-$SITE/../duoalley}" && pwd)" || { echo "make-icons: no game repository there"; exit 1; }
 ICON="$GAME/app/DuoAlley/AppIcon.icon"
 [ -f "$ICON/icon.json" ] || { echo "make-icons: no $ICON/icon.json"; exit 1; }
+# COMMITTED means committed: the files are read from the working tree, so refuse while it differs from
+# HEAD (an edited, staged or untracked file under AppIcon.icon), or the site could show an icon nobody
+# has committed. scripts/lint-site.py hashes the HEAD blobs, not the working tree, for the same reason.
+git -C "$GAME" rev-parse --git-dir >/dev/null 2>&1 || { echo "make-icons: $GAME is not a git repository"; exit 1; }
+dirty="$(git -C "$GAME" status --porcelain --untracked-files=all -- app/DuoAlley/AppIcon.icon)"
+[ -z "$dirty" ] || { printf 'make-icons: AppIcon.icon has uncommitted changes in %s; commit them first:\n%s\n' "$GAME" "$dirty"; exit 1; }
 BRAVE="/Applications/Brave Browser.app/Contents/MacOS/Brave Browser"
 [ -x "$BRAVE" ] || { echo "make-icons: headless Brave not found at $BRAVE"; exit 1; }
 
@@ -84,4 +90,4 @@ done
     echo "# scripts/lint-site.py fails when the game repository's files no longer match."
     (cd "$ICON" && shasum -a 256 icon.json Assets/*.png)
 } > "$SITE/scripts/icon-source.txt"
-echo "make-icons: wrote 4 pictures and scripts/icon-source.txt from $ICON"
+echo "make-icons: wrote 4 pictures and scripts/icon-source.txt from $ICON at $(git -C "$GAME" rev-parse --short HEAD)"
