@@ -4,10 +4,12 @@
 # script committed here is a public page the moment it is pushed. `.nojekyll` is not the answer and
 # cannot be: with Jekyll off there is no ignore list at all. So Jekyll is on and told to publish
 # nothing but the site. That is safe for these pages: Jekyll renders only files carrying YAML front
-# matter, and both pages begin with `<!doctype html>` with no front matter, so they are copied byte
-# for byte. scripts/lint-site.py fails on front matter or a Liquid tag opener, so that stays true.
+# matter, and every page begins with `<!doctype html>` with no front matter, so they are copied
+# byte for byte, as are app-ads.txt, sitemap.xml, robots.txt and the pictures in assets/.
+# scripts/lint-site.py fails on front matter or a Liquid tag opener, so that stays true.
 #
-# `scripts` holds the lint, the page photographer and the live checks. None of it is the site.
+# `scripts` holds the lint, the icon drawer (with the record of which icon it drew), the page
+# photographer and the live checks. None of it is the site.
 #
 # ANYTHING ADDED TO THIS REPOSITORY IS PUBLIC THE MOMENT IT IS PUSHED UNLESS IT IS NAMED HERE. Add
 # it here first, and re-run scripts/check-live.sh after any change to this file: an excluded page

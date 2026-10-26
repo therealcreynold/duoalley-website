@@ -1,12 +1,13 @@
 /* Duo Alley: the whole site's styles.
 
-   One file for both pages. There is no game art yet, so there is no picture anywhere: the look is
-   the family's arcade cabinet drawn in CSS, on a boardwalk at night. A plum navy cabinet, a row of
+   One file for every page. The only pictures are the app icon, drawn by scripts/make-icons.sh from the
+   icon the game has committed; everything else is the family's arcade cabinet drawn in CSS, on a
+   boardwalk at night. A plum navy cabinet, a row of
    warm bulbs lit and unlit in turn, the name in neon (DUO in the family's cyan, ALLEY in boardwalk
    pink), and a strip of maple lane edged in brass along the bottom of the machine.
 
    Two kinds of surface, on purpose:
-   - THE MACHINE. The cabinet and the 404's bar are a dark object whatever the reader's setting, as
+   - THE MACHINE. The cabinet and every page's bar are a dark object whatever the reader's setting, as
      an arcade cabinet is. Their colours are fixed, never themed.
    - THE PAGE. Everything else follows the reader's light or dark preference. Light is defined in
      full on bare :root, so a browser that reports no preference still gets every colour; dark
@@ -167,20 +168,72 @@ a:hover { color: var(--link-hover); }
 .note { padding-block: 36px 8px; text-align: center; }
 .note p { margin: 0; color: var(--ink-soft); }
 
-/* The 404's bar: the machine's sign, small. */
-.bar { padding-block: 14px; background: var(--cab); }
+/* A link for keyboards past the bar, out of sight until it has focus. */
+.skip {
+  position: absolute; left: 16px; top: -100px; z-index: 10;
+  padding: 8px 14px; border-radius: 8px;
+  background: var(--cab-panel); color: var(--cab-ink); outline-color: var(--neon);
+}
+.skip:focus { top: 12px; }
+
+/* Every inner page's bar: the machine's sign, small, with the icon and the three pages. */
+.bar { padding-block: 12px; background: var(--cab); }
+.bar .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+             gap: 8px 20px; }
 .brand {
+  display: inline-flex; align-items: center; gap: 10px;
   font-size: 19px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
   text-decoration: none;
 }
 .brand .duo, .brand .word { text-shadow: none; }
 .brand:hover .word { text-decoration: underline; }
+.mark { width: 34px; height: 34px; border-radius: 8px; display: block; }
+.bar nav { display: flex; gap: 18px; font-size: 15.5px; font-weight: 600; }
+.bar nav a { color: var(--cab-soft); text-decoration: none; }
+.bar nav a:hover, .bar nav a[aria-current="page"] { color: var(--cab-ink); }
+.bar nav a[aria-current="page"] { text-decoration: underline; text-decoration-color: var(--pink);
+                                  text-decoration-thickness: 2px; }
+
+/* The icon in the marquee, as the home screen shows it: rounded, lit from behind. */
+.hero-icon {
+  display: block; margin: 0 auto 26px; width: 128px; height: 128px; border-radius: 29px;
+  box-shadow: 0 0 0 1px rgba(176,141,87,.5), 0 10px 40px rgba(255,79,184,.28);
+}
+
+/* The home page's sections, on the page surface. */
+.feature { max-width: 740px; margin: 0 auto; padding-top: 34px; }
+.feature h2, main.doc h2 {
+  margin: 0 0 8px; font-size: 24px; font-weight: 800; letter-spacing: -.01em; color: var(--head);
+  font-family: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Segoe UI",
+               system-ui, sans-serif;
+}
+.feature p { margin: 0 0 12px; color: var(--ink-soft); }
+.cards { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 10px;
+         grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+.cards li {
+  padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px;
+  border-left: 4px solid var(--accent); color: var(--ink-soft); line-height: 1.45;
+}
+.cards strong { display: block; color: var(--head); }
 
 main.doc { padding-block: 40px 12px; }
 main.doc h1 { margin: 0 0 6px; font-size: clamp(30px, 6.4vw, 42px); font-weight: 900;
               letter-spacing: -.02em; color: var(--head); }
 main.doc .updated { margin: 0 0 22px; font-size: 15px; color: var(--accent); font-weight: 600; }
-main.doc p { color: var(--ink-soft); }
+main.doc p, main.doc li, main.doc dd { color: var(--ink-soft); }
+main.doc h2 { margin-top: 34px; scroll-margin-top: 16px; }
+main.doc ul { padding-left: 1.2em; }
+main.doc li { margin-bottom: 6px; }
+main.doc dt { font-weight: 700; color: var(--head); margin-top: 12px; }
+main.doc dd { margin: 0 0 0 1em; }
+main.doc dd p { margin: 2px 0 8px; }
+main.doc strong { color: var(--ink); }
+.callout {
+  margin: 18px 0; padding: 4px 18px; border-radius: 12px;
+  border: 1px solid var(--line); border-left: 4px solid var(--accent); background: var(--page-2);
+}
+.toc { columns: 2 220px; column-gap: 24px; margin: 18px 0 8px; font-size: 15.5px; }
+.toc li { break-inside: avoid; }
 
 /* ---- Footer ------------------------------------------------------------------------------ */
 
@@ -190,6 +243,7 @@ footer {
   font-size: 14.5px; color: var(--ink-soft); text-align: center;
 }
 footer p { margin: 0; }
+footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 20px; margin-bottom: 10px; }
 
 /* ---- Narrow screens ----------------------------------------------------------------------- */
 

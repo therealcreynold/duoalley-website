@@ -3,7 +3,7 @@
 #
 #     scripts/shoot.sh /some/empty/dir
 #
-# Writes, for each of the two pages: a desktop (1280 px) and a phone (390 px, drawn at 2x) capture, in
+# Writes, for each page (home, support, privacy, terms, 404): a desktop (1280 px) and a phone (390 px, drawn at 2x) capture, in
 # light and in dark, each the page's FULL height, then cuts each into slices no taller than a screen and
 # downscales those to 1100 px (sips -Z 1100), which is what to open and read. Then: read every string,
 # check both themes, the phone's gutters and that nothing scrolls sideways. (sips darkens the outermost
@@ -94,7 +94,8 @@ shoot() {  # name page width scale scheme(0 dark, 1 light)
     printf '  %-28s %4s x %-5s %s slice(s)\n' "$name" "$width" "$h" "$((n - 1))"
 }
 
-for spec in "home:index.html" "404:404.html"; do
+for spec in "home:index.html" "support:support/index.html" "privacy:privacy/index.html" \
+            "terms:terms/index.html" "404:404.html"; do
     name="${spec%%:*}"; page="${spec#*:}"
     shoot "$name-desktop-light" "$page" 1280 1 1
     shoot "$name-desktop-dark"  "$page" 1280 1 0

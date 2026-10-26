@@ -1,7 +1,10 @@
 # duoalley.com
 #
-# One page, meant to be found. Keep it crawlable: when the game ships, this domain becomes the App
-# Store listing's Marketing URL, and advertising networks will crawl /app-ads.txt from here.
+# Everything here is meant to be found, and app-ads.txt in particular MUST stay crawlable: advertising
+# networks reach it by following the App Store listing's Marketing URL, and a Disallow here would
+# quietly break the verification the game's advertising depends on.
 
 User-agent: *
 Allow: /
+
+Sitemap: https://duoalley.com/sitemap.xml

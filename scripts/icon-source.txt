@@ -1,0 +1,12 @@
+# The game's AppIcon.icon these pictures were drawn from (scripts/make-icons.sh).
+# scripts/lint-site.py fails when the game repository's files no longer match.
+6f1f804c55a3170c5704c8ec61e7c202be5f62dc8d3589ed50da617b7ad75daa  icon.json
+97ec89c6a32eaabad410f0f156d067161d7072c624353a699156f2f949c39711  Assets/backdrop-dark.png
+46c0f3e46cf09e96a04df940ee9f96db47d4b93b5e7d377c937937f603a7cc2c  Assets/backdrop-tinted.png
+3aa6dac15b581df24b244197b5723660845422763441cd7d3fecdadbb0895e2f  Assets/backdrop.png
+4fd489849fb6a052aa20ad2b283908f544e8cba661023b875952fc7ff2c65aea  Assets/ball-tinted.png
+71f922c6691eef46ef1541b61340ba3082cdbcca4c782bf2de1f6ad61068b55f  Assets/ball.png
+6f18eca583e834f2a3f58922271eea9db39426ea98d2838d676efb44f6f151ba  Assets/plate-tinted.png
+9e68dc6dd4d5cab75c10ef10a7fad6e9ce8824aed0efad7bc2c4e7b424dcb88c  Assets/plate.png
+8d0cb73e96b3f8bb2742e687c162c0ed910964a88508e1dfcf6da74e0e065ccd  Assets/ramp-tinted.png
+25d21ee0223e467be7269dcddfc61d37ed990ee9f997f82f7d7c76cae835400d  Assets/ramp.png
