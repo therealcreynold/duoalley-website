@@ -20,17 +20,13 @@
      into the app (MoneyLinks.privacyPolicy, app/DuoAlley/Kit/Ads/AdsSettingsSection.swift) and is the
      App Store Connect Privacy Policy URL, so the path must not move.
 
-     A DRAFT UNTIL THE GAME REPOSITORY HAS docs/PRIVACY-POLICY.md. That file does not exist yet (the
-     wave 6 Assets row owns it). These words were written from the build: PrivacyInfo.xcprivacy (the
-     binary collects nothing, no tracking domains), Info.plist (NSUserTrackingUsageDescription), the
-     Kit/Ads code (AdPolicy's pacing, the ATT card on the first results, the consent gate, the
-     Personalised ads switch, Privacy options, Report an ad, RemoveAdsStore.whatItBuys), Kit/Score
-     (nothing from Pass & Play or a +3 frame posted), the share card, and the Google Mobile Ads and UMP
-     SDKs' own disclosures (Device ID, Advertising Data, Coarse Location, Product Interaction,
-     Performance Data, Other Diagnostic Data, Crash Data). When docs/PRIVACY-POLICY.md lands, it is the
-     source and this page becomes its words exactly: scripts/lint-site.py compares the two word for word
-     whenever the game repository sits beside this one, and the game's Scripts/preflight-release.sh
-     compares the served page with it before an archive. -->
+     THE GAME REPOSITORY'S docs/PRIVACY-POLICY.md IS THE SOURCE, and this page is its words exactly.
+     Wave 6 integration (the game's decision 211) reconciled the two: the policy took this page's
+     reviewed text (the email section, the US opt-out promised only where Google shows it, the ATT card's
+     title, the refund line). scripts/lint-site.py compares the two word for word whenever the game
+     repository sits beside this one (--require-game for release), and the game's
+     Scripts/preflight-release.sh compares the served page with it before an archive. A change starts
+     in the policy, then comes here in the same words. -->
 </head>
 <body>
 <a class="skip" href="#main">Skip to the page</a>
