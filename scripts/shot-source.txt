@@ -1,5 +1,5 @@
 # The game's framed store screenshots these pictures were made from (scripts/make-shots.sh).
 # scripts/lint-site.py fails when the game repository's committed files no longer match.
-f46e68150ecf600c571b265832e961370a8562e722c48d9c94afe0d791b65081  marketing/screenshots-framed/duo-inner/duo-inner-02-hundred.png
-16ea0520345abbfbcf2b59898a65463948b336038db9fce404cb523ce4cd1600  marketing/screenshots-framed/duo-cover/duo-cover-01-hero.png
-78dbb7d4a233416b85876e00d7a670749cf74dbac364d9d0c1ded89d39316fbf  marketing/screenshots-framed/iphone/iphone-01-hero.png
+564779296aab1ffc36cfb744e371974f60d815e747430fefeb65e3050fb37719  marketing/screenshots-framed/duo-inner/duo-inner-02-hundred.png
+eb9b6ed03e8c73f4368e40379323453a88208cc0b2d341f64a5dd8ee52fc70ec  marketing/screenshots-framed/duo-cover/duo-cover-01-hero.png
+912e136b5e4ed3af05c042ab9c1bec2846f2eb9a04076c3c9ac26d66bb9b287e  marketing/screenshots-framed/iphone/iphone-01-hero.png
