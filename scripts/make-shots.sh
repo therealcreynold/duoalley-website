@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Copies the game's store screenshots onto this site, from the pictures the game has COMMITTED.
 #
-#     scripts/make-shots.sh                      uses ../duoalley
+#     scripts/make-shots.sh                      uses ../hingealley (or ../duoalley)
 #     scripts/make-shots.sh /path/to/game/repo   uses <that>
 #
 # The home page shows three of the store's own framed screenshots (the game's
@@ -18,7 +18,8 @@
 set -euo pipefail
 
 SITE="$(cd "$(dirname "$0")/.." && pwd)"
-GAME="$(cd "${1:-$SITE/../duoalley}" && pwd)" || { echo "make-shots: no game repository there"; exit 1; }
+DEFAULT_GAME="$SITE/../hingealley"; [ -d "$DEFAULT_GAME" ] || DEFAULT_GAME="$SITE/../duoalley"
+GAME="$(cd "${1:-$DEFAULT_GAME}" && pwd)" || { echo "make-shots: no game repository there"; exit 1; }
 git -C "$GAME" rev-parse --git-dir >/dev/null 2>&1 || { echo "make-shots: $GAME is not a git repository"; exit 1; }
 
 # published name : source in the game repository : width on the page

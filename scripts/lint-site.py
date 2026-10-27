@@ -18,6 +18,14 @@ touches the network. What it fails on, and why each one is here:
     other apps, the sibling Duo games included. Spelled in pieces, so this file does not trip its own
     scan.
   - the device's name anywhere but a "Designed for iPhone Duo" statement, in the published files.
+  - the game's former name (two words, the first the one Apple's device carries; the owner renamed
+    the game Hinge Alley on 27 October 2026 so that no player-facing name leans on Apple's product
+    name), in any text file but app-ads.txt, whose comments are a contract kept exactly. The domain,
+    the bundle id, the repository names and the game's DuoAlley folders are one word or hyphenated,
+    and stay.
+  - dating language in the published files: "hinge" here is the phone's fold, and a dating app of
+    that name exists, so no page says "a perfect match", matchmaking, dating, swipe or the like (a
+    Pass & Play match is a game, and stays).
   - a price (a currency sign before a number) in the published files: the App Store shows the price,
     in the visitor's own currency, and a page that names one is wrong somewhere the day it is read.
 
@@ -36,15 +44,15 @@ touches the network. What it fails on, and why each one is here:
     apps.apple.com then, README.md "Launch day"), a plain http link, a mailto that is not the contact
     address, a relative URL, a root relative link or fragment that does not resolve, and a link to a
     page without its trailing slash (that is a redirect, and the app and the listing hold the slash).
-  - a page without the doctype, a viewport, a title or the stylesheet; a page other than the 404
-    without its canonical URL; a home page without "Coming to the App Store." exactly once, or naming
+  - a page without the doctype, a viewport, a title or the stylesheet; a title that does not name the
+    game (NAME), an og:site_name that is not NAME; a page other than the 404 without its canonical URL; a home page without "Coming to the App Store." exactly once, or naming
     a date.
 
   THE FILES THAT ARE CONTRACTS: CNAME; app-ads.txt (OWNERDOMAIN and the Google seller line, exactly,
   and nothing else); robots.txt (no Disallow, the Sitemap line); sitemap.xml (exactly the four pages);
   _config.yml (its exclude list is NOT_PUBLISHED below, exactly); and no .nojekyll.
 
-  THE GAME REPOSITORY, when it sits beside this one (../duoalley; each check is SKIPPED, and says so,
+  THE GAME REPOSITORY, when it sits beside this one (../hingealley, or ../duoalley before the rename; each check is SKIPPED, and says so,
   when the file it needs is not there; with --require-game every SKIP is a FAIL, which is how a release
   is gated):
   - privacy/index.html against docs/PRIVACY-POLICY.md, WORD FOR WORD: the policy is that file's text
@@ -72,8 +80,11 @@ import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-GAME = ROOT.parent / "duoalley"
-DOMAIN = "duoalley.com"
+# The game's checkout beside this one: ../hingealley after the folder's rename, ../duoalley before it.
+GAME = next((ROOT.parent / d for d in ("hingealley", "duoalley") if (ROOT.parent / d).is_dir()),
+            ROOT.parent / "hingealley")
+DOMAIN = "duoalley.com"                 # the domain keeps the former name (the owner's call, for later)
+NAME = "Hinge Alley"                    # the game's player-facing name (27 October 2026)
 CONTACT = "info@crindustries.xyz"
 PAGES = ["index.html", "support/index.html", "privacy/index.html", "terms/index.html"]
 ICONS = {"assets/icon-32.png": 32, "assets/icon-96.png": 96, "assets/icon-180.png": 180,
@@ -115,6 +126,13 @@ PROTECTED = [
 DASH = re.compile("[\u2013\u2014]|&[mn]dash;|&#(8211|8212|x201[34]);", re.I)
 DEVICE = re.compile(r"iphone\s+duo", re.I)
 DEVICE_ALLOWED = re.compile(r"Designed for iPhone Duo")
+# The former name, in pieces. Two words only: "duoalley.com", "app/DuoAlley" and "duo-alley" are
+# permanent identifiers and do not match.
+OLD_NAME = re.compile(r"\bduo[ \t]+" + r"alley\b", re.I)
+OLD_NAME_ALLOWED = {"app-ads.txt"}
+# A game "match" (a Pass & Play match) is a game word and is allowed; the dating senses are not.
+DATING = re.compile(r"\b((perfect|a|your|it'?s[ \t]+a)[ \t]+match|match(ed|maker|making)|dat(e|es|ing)[ \t]+(night|app)s?"
+                    r"|dating|swip(e|es|ed|ing)|soul[ -]?mates?|flirt\w*|romanc\w*|crush(es)?)\b", re.I)
 PRICE = re.compile("[$\u20ac\u00a3\u00a5]\\s?\\d|\\b(USD|EUR|GBP)\\s?\\d|\\d\\s?(USD|EUR|GBP)\\b")
 # Months capitalized (so "may" and "march" stay words), seasons either way; "fall" is left out.
 DATE = re.compile(r"\b(19|20)\d\d\b|\b(January|February|March|April|May|June|July|August|September|"
@@ -157,6 +175,11 @@ def check_words(problems: list[str]) -> None:
             for pattern, why in PROTECTED:
                 if pattern.search(line):
                     problems.append(f"{rel(path)}:{number}: {why}")
+            if rel(path) not in OLD_NAME_ALLOWED and OLD_NAME.search(line):
+                problems.append(f"{rel(path)}:{number}: the game's former name (it is {NAME} now)")
+            if path in published and DATING.search(line):
+                problems.append(f"{rel(path)}:{number}: dating language ({DATING.search(line).group(0)!r}); "
+                                "our hinge is the phone's fold")
             if path in published and DEVICE.search(DEVICE_ALLOWED.sub("", line)):
                 problems.append(f"{rel(path)}:{number}: the device's name outside 'Designed for iPhone Duo'")
             if path in published and PRICE.search(line):
@@ -278,6 +301,12 @@ def check_pages(problems: list[str]) -> None:
             problems.append(f"{name}: no viewport meta")
         if "title" not in names:
             problems.append(f"{name}: no <title>")
+        else:
+            title = re.search(r"<title>(.*?)</title>", text, re.S | re.I)
+            if not title or NAME not in html.unescape(title.group(1)):
+                problems.append(f"{name}: the <title> does not name {NAME}")
+        if "og:site_name" in metas and metas["og:site_name"] != NAME:
+            problems.append(f"{name}: og:site_name is {metas['og:site_name']!r}, expected {NAME!r}")
         links = [a for t, a in tags if t == "link"]
         if not any(a.get("rel") == "stylesheet" and a.get("href") == "/style.css" for a in links):
             problems.append(f"{name}: does not link /style.css")
@@ -540,7 +569,7 @@ def self_test() -> list[str]:
                  "Half " + "Court Duo", "half" + "court" + " duo", "Duo Shoot" + "out", "duo" + "shootout-website"],
     }
     missed = ["ABBA", "nbattery", "unbalanced", "HTML", "on fire", "a mutable bloom", "cratered", "skeleton",
-              "a sketch", "whisked", "stormy turf", "a bowling alley", "a penalty shootout", "Duo Alley",
+              "a sketch", "whisked", "stormy turf", "a bowling alley", "a penalty shootout", NAME,
               "duoalley.com", "ball masters' guild", "big caves", "an ocean of media"]
     problems = []
     for group, needles in caught.items():
@@ -556,6 +585,21 @@ def self_test() -> list[str]:
             problems.append(f"self-test: the dash pattern misses {needle!r}")
     if DASH.search("a hyphen-minus is fine, and &middot; too"):
         problems.append("self-test: the dash pattern catches a hyphen")
+    for needle in ["Duo" + " Alley", "DUO" + " ALLEY", "duo" + "  alley"]:
+        if not OLD_NAME.search(needle):
+            problems.append(f"self-test: the former-name pattern misses {needle!r}")
+    for text in ["duoalley.com", "app/DuoAlley/AppIcon.icon", "therealcreynold/duo" + "-alley", NAME, "Daily Alley"]:
+        if OLD_NAME.search(text):
+            problems.append(f"self-test: the former-name pattern catches {text!r}")
+    for needle in ["a perfect match", "swipe right", "dating", "date night", "Matched!", "find your soulmate",
+                   "It's a match", "matchmaking"]:
+        if not DATING.search(needle):
+            problems.append(f"self-test: the dating pattern misses {needle!r}")
+    for text in ["Daily Alley, new at midnight UTC", "the date at the top", "a single ball", "Pass &amp; Play game",
+                 "it hops the hinge", "Hinge parallax", "updated",
+                 "Pass &amp; Play matches are never posted", "a two player match"]:
+        if DATING.search(text):
+            problems.append(f"self-test: the dating pattern catches {text!r}")
     if DEVICE.search(DEVICE_ALLOWED.sub("", "Designed for iPhone Duo")):
         problems.append("self-test: the allowed platform statement is refused")
     if not DEVICE.search(DEVICE_ALLOWED.sub("", "the iPhone Duo game")):

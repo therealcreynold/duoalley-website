@@ -1,10 +1,10 @@
 # duoalley.com
 
-The website of **Duo Alley**, the boardwalk alley roller as an arcade game for a phone that folds
+The website of **Hinge Alley**, the boardwalk alley roller as an arcade game for a phone that folds
 (bundle `com.duoalley.game`, App Store Connect Apple ID `6826694965`; the game repository is
-`therealcreynold/duo-alley`, checked out beside this one as `../duoalley`). It carries the three URLs
-App Store Connect and the app need, the file advertising networks crawl, and a home page that says
-truthfully what the game is.
+`therealcreynold/hinge-alley`, checked out beside this one as `../hingealley`, or `../duoalley` before
+the folder's rename). It carries the three URLs App Store Connect and the app need, the file advertising
+networks crawl, and a home page that says truthfully what the game is.
 
 Hand-written pages, one stylesheet, four icon files. No build step, no framework, no JavaScript, no web
 fonts and nothing fetched from another host: every file here is the file that gets served.
@@ -129,6 +129,14 @@ a web page is what a search engine reads and what a lawyer is shown, and this re
 - **The device's name only as a platform statement** ("Designed for iPhone Duo"), never in prose and
   never as part of the game's name. The prose says "a phone that folds".
 - **No price.**
+- **The game's name is Hinge Alley** (the owner's rename, 27 October 2026, so that no player-facing
+  name leans on Apple's product name). The former two-word name appears in no file but `app-ads.txt`,
+  whose comments are kept exactly. What stays is permanent or invisible: the domain `duoalley.com`
+  (the owner's later call), this repository's name, the bundle id and the game's `DuoAlley` folders.
+  Every page's `<title>` names Hinge Alley and its `og:site_name` is exactly that.
+- **No dating language.** Our hinge is the phone's fold, and a dating app of that name exists, so no
+  page says "a perfect match", matchmaking, dating, swipe, soulmate or the like. A Pass & Play match
+  is a game, and the word stays in that sense.
 
 `scripts/lint-site.py` enforces these over every text file in the repository, this README and its own
 source included, with its patterns spelled in pieces so it does not fail its own scan; `--self-test`

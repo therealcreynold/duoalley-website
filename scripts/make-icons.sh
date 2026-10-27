@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Redraws every picture of the app icon on this site from the icon the game has COMMITTED.
 #
-#     scripts/make-icons.sh                      uses ../duoalley
+#     scripts/make-icons.sh                      uses ../hingealley (or ../duoalley)
 #     scripts/make-icons.sh /path/to/game/repo   uses <that>
 #
 # THE ONE COMMAND. The owner has not picked the icon yet (the game's owner-open O9: five options drawn
@@ -32,7 +32,8 @@
 set -euo pipefail
 
 SITE="$(cd "$(dirname "$0")/.." && pwd)"
-GAME="$(cd "${1:-$SITE/../duoalley}" && pwd)" || { echo "make-icons: no game repository there"; exit 1; }
+DEFAULT_GAME="$SITE/../hingealley"; [ -d "$DEFAULT_GAME" ] || DEFAULT_GAME="$SITE/../duoalley"
+GAME="$(cd "${1:-$DEFAULT_GAME}" && pwd)" || { echo "make-icons: no game repository there"; exit 1; }
 ICON="$GAME/app/DuoAlley/AppIcon.icon"
 [ -f "$ICON/icon.json" ] || { echo "make-icons: no $ICON/icon.json"; exit 1; }
 # COMMITTED means committed: the files are read from the working tree, so refuse while it differs from

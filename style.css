@@ -1,10 +1,10 @@
-/* Duo Alley: the whole site's styles.
+/* Hinge Alley: the whole site's styles.
 
    One file for every page. The only pictures are the app icon, drawn by scripts/make-icons.sh from the
    icon the game has committed, and three of the store's own screenshots, copied by
    scripts/make-shots.sh; everything else is the family's arcade cabinet drawn in CSS, on a
    boardwalk at night. A plum navy cabinet, a row of
-   warm bulbs lit and unlit in turn, the name in neon (DUO in the family's cyan, ALLEY in boardwalk
+   warm bulbs lit and unlit in turn, the name in neon (HINGE in the family's cyan, ALLEY in boardwalk
    pink), and a strip of maple lane edged in brass along the bottom of the machine.
 
    Two kinds of surface, on purpose:
@@ -140,7 +140,7 @@ a:hover { color: var(--link-hover); }
   font-size: clamp(40px, 10.5vw, 88px); font-weight: 900; line-height: 1.02; letter-spacing: .015em;
   text-transform: uppercase;
 }
-.duo {
+.hinge {
   color: var(--neon);
   text-shadow: 0 0 3px #C8F8FF, 0 0 14px rgba(46,230,255,.85), 0 0 38px rgba(46,230,255,.5);
 }
@@ -186,7 +186,7 @@ a:hover { color: var(--link-hover); }
   font-size: 19px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
   text-decoration: none;
 }
-.brand .duo, .brand .word { text-shadow: none; }
+.brand .hinge, .brand .word { text-shadow: none; }
 .brand:hover .word { text-decoration: underline; }
 .mark { width: 34px; height: 34px; border-radius: 8px; display: block; }
 .bar nav { display: flex; gap: 18px; font-size: 15.5px; font-weight: 600; }
