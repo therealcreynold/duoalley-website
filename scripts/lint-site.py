@@ -83,7 +83,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 # The game's checkout beside this one: ../hingealley after the folder's rename, ../duoalley before it.
 GAME = next((ROOT.parent / d for d in ("hingealley", "duoalley") if (ROOT.parent / d).is_dir()),
             ROOT.parent / "hingealley")
-DOMAIN = "duoalley.com"                 # the domain keeps the former name (the owner's call, for later)
+DOMAIN = "hingealley.com"               # the domain since 27 October 2026; duoalley.com redirects here
 NAME = "Hinge Alley"                    # the game's player-facing name (27 October 2026)
 CONTACT = "info@crindustries.xyz"
 PAGES = ["index.html", "support/index.html", "privacy/index.html", "terms/index.html"]
@@ -126,8 +126,8 @@ PROTECTED = [
 DASH = re.compile("[\u2013\u2014]|&[mn]dash;|&#(8211|8212|x201[34]);", re.I)
 DEVICE = re.compile(r"iphone\s+duo", re.I)
 DEVICE_ALLOWED = re.compile(r"Designed for iPhone Duo")
-# The former name, in pieces. Two words only: "duoalley.com", "app/DuoAlley" and "duo-alley" are
-# permanent identifiers and do not match.
+# The former name, in pieces. Two words only: "duoalley.com" (the former domain, now a redirect),
+# "app/DuoAlley" and "duo-alley" are identifiers and do not match.
 OLD_NAME = re.compile(r"\bduo[ \t]+" + r"alley\b", re.I)
 OLD_NAME_ALLOWED = {"app-ads.txt"}
 # A game "match" (a Pass & Play match) is a game word and is allowed; the dating senses are not.
@@ -570,7 +570,7 @@ def self_test() -> list[str]:
     }
     missed = ["ABBA", "nbattery", "unbalanced", "HTML", "on fire", "a mutable bloom", "cratered", "skeleton",
               "a sketch", "whisked", "stormy turf", "a bowling alley", "a penalty shootout", NAME,
-              "duoalley.com", "ball masters' guild", "big caves", "an ocean of media"]
+              "duoalley.com", "hingealley.com", "ball masters' guild", "big caves", "an ocean of media"]
     problems = []
     for group, needles in caught.items():
         for needle in needles:
@@ -588,7 +588,7 @@ def self_test() -> list[str]:
     for needle in ["Duo" + " Alley", "DUO" + " ALLEY", "duo" + "  alley"]:
         if not OLD_NAME.search(needle):
             problems.append(f"self-test: the former-name pattern misses {needle!r}")
-    for text in ["duoalley.com", "app/DuoAlley/AppIcon.icon", "therealcreynold/duo" + "-alley", NAME, "Daily Alley"]:
+    for text in ["duoalley.com", "hingealley.com", "app/DuoAlley/AppIcon.icon", "therealcreynold/duo" + "-alley", NAME, "Daily Alley"]:
         if OLD_NAME.search(text):
             problems.append(f"self-test: the former-name pattern catches {text!r}")
     for needle in ["a perfect match", "swipe right", "dating", "date night", "Matched!", "find your soulmate",

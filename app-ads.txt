@@ -1,10 +1,10 @@
-# app-ads.txt for duoalley.com
+# app-ads.txt for hingealley.com
 #
 # Advertising networks crawl this file to confirm who is authorised to sell advertising inside
 # Duo Alley. The Google line names the publisher account that sells it, with Google's certification
 # authority id. Duo Alley uses Google AdMob alone, with no mediation, so there is no other line.
 
 # The business that owns this inventory: the domain set as the App Store Connect Marketing URL.
-OWNERDOMAIN=duoalley.com
+OWNERDOMAIN=hingealley.com
 
 google.com, pub-5706069574815967, DIRECT, f08c47fec0942fa0

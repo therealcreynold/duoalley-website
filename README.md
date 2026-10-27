@@ -1,4 +1,4 @@
-# duoalley.com
+# hingealley.com
 
 The website of **Hinge Alley**, the boardwalk alley roller as an arcade game for a phone that folds
 (bundle `com.duoalley.game`, App Store Connect Apple ID `6826694965`; the game repository is
@@ -11,12 +11,12 @@ fonts and nothing fetched from another host: every file here is the file that ge
 
 | Path | Why it exists |
 |---|---|
-| `index.html` | The home page and the App Store Connect **Marketing URL** (`https://duoalley.com`, the apex): what the game is, the five modes, the poses, free with ads, "Coming to the App Store." |
-| `support/index.html` | The App Store Connect **Support URL** (`https://duoalley.com/support/`): contact, then answers written from the game's code (rolling, the modes, Daily Alley, Pass & Play, the poses, pausing, the +3 balls video, Remove Ads and Restore Purchases, Game Center, sound, ads and choices, phones, data) |
-| `privacy/index.html` | The App Store Connect **Privacy Policy URL** (`https://duoalley.com/privacy/`), also compiled into the app (`MoneyLinks.privacyPolicy`). A draft from the build until the game has `docs/PRIVACY-POLICY.md` (below) |
+| `index.html` | The home page and the App Store Connect **Marketing URL** (`https://hingealley.com`, the apex): what the game is, the five modes, the poses, free with ads, "Coming to the App Store." |
+| `support/index.html` | The App Store Connect **Support URL** (`https://hingealley.com/support/`): contact, then answers written from the game's code (rolling, the modes, Daily Alley, Pass & Play, the poses, pausing, the +3 balls video, Remove Ads and Restore Purchases, Game Center, sound, ads and choices, phones, data) |
+| `privacy/index.html` | The App Store Connect **Privacy Policy URL** (`https://hingealley.com/privacy/`), also compiled into the app (`MoneyLinks.privacyPolicy`). A draft from the build until the game has `docs/PRIVACY-POLICY.md` (below) |
 | `terms/index.html` | Terms of use beside Apple's standard licence. In no App Store Connect field; the app does not link it |
 | `404.html` | Served by GitHub Pages for any other path ("Gutter ball"), at whatever path was asked for |
-| `app-ads.txt` | `OWNERDOMAIN=duoalley.com` and the AdMob publisher account's seller line |
+| `app-ads.txt` | `OWNERDOMAIN=hingealley.com` and the AdMob publisher account's seller line |
 | `sitemap.xml`, `robots.txt` | The four pages; everything crawlable, app-ads.txt above all |
 | `style.css` | Every page's styles, light and dark |
 | `assets/icon-{32,96,180,512}.png` | The app icon: favicon, header mark, home screen icon and hero, share image. Drawn by `scripts/make-icons.sh` |
@@ -32,10 +32,10 @@ this one:
 
 | App Store Connect field | URL |
 |---|---|
-| Marketing URL | `https://duoalley.com` |
-| Support URL | `https://duoalley.com/support/` |
-| Privacy Policy URL | `https://duoalley.com/privacy/` (the app's `MoneyLinks.privacyPolicy`, slash included) |
-| app-ads.txt (crawled, not typed) | `https://duoalley.com/app-ads.txt` |
+| Marketing URL | `https://hingealley.com` |
+| Support URL | `https://hingealley.com/support/` |
+| Privacy Policy URL | `https://hingealley.com/privacy/` (the app's `MoneyLinks.privacyPolicy`, slash included) |
+| app-ads.txt (crawled, not typed) | `https://hingealley.com/app-ads.txt` |
 
 The trailing slashes matter: the bare paths answer 301, and the game's `Scripts/preflight-release.sh`
 refuses a URL that redirects.
@@ -131,8 +131,9 @@ a web page is what a search engine reads and what a lawyer is shown, and this re
 - **No price.**
 - **The game's name is Hinge Alley** (the owner's rename, 27 October 2026, so that no player-facing
   name leans on Apple's product name). The former two-word name appears in no file but `app-ads.txt`,
-  whose comments are kept exactly. What stays is permanent or invisible: the domain `duoalley.com`
-  (the owner's later call), this repository's name, the bundle id and the game's `DuoAlley` folders.
+  whose comments are kept exactly. What stays is permanent or invisible: this repository's name, the
+  bundle id and the game's `DuoAlley` folders. The domain moved to `hingealley.com` the same day (the
+  owner's call); `duoalley.com` redirects to it.
   Every page's `<title>` names Hinge Alley and its `og:site_name` is exactly that.
 - **No dating language.** Our hinge is the phone's fold, and a dating app of that name exists, so no
   page says "a perfect match", matchmaking, dating, swipe, soulmate or the like. A Pass & Play match
@@ -192,8 +193,11 @@ from the store listing's Marketing URL, so allow about 24 hours after both are l
 
 ## The DNS
 
-duoalley.com is registered at Namecheap. These nine records point it at GitHub Pages, the same nine
-the owner's other game sites use. An apex domain needs A and AAAA records rather than a CNAME:
+hingealley.com is the site's domain since 27 October 2026 (the owner's call; before that it was
+duoalley.com, registered at Namecheap, which now redirects to hingealley.com from a separate
+repository). These nine records point it at GitHub Pages, the same nine the owner's other game sites
+use, and the owner had set them on hingealley.com before the switch. An apex domain needs A and AAAA
+records rather than a CNAME:
 
 | Type | Host | Value |
 |---|---|---|
@@ -212,20 +216,23 @@ rather than breaking the site outright. Namecheap's parking records on a new dom
 `parkingpage.namecheap.com` and a `URL Redirect @`) go; the email forwarding MX and SPF records stay.
 Read what is there before changing anything:
 
-    dig +short @1.1.1.1 duoalley.com A
-    dig +short @1.1.1.1 duoalley.com AAAA
-    dig +short @1.1.1.1 www.duoalley.com CNAME
+    dig +short @1.1.1.1 hingealley.com A
+    dig +short @1.1.1.1 hingealley.com AAAA
+    dig +short @1.1.1.1 www.hingealley.com CNAME
 
 The contact address is **info@crindustries.xyz**, the one the owner's other games and their sites use.
-Nothing here needs email at duoalley.com, so no forwarding address was configured.
+Nothing here needs email at either domain, so no forwarding address was configured.
 
 ## How it was set up
 
-**DONE 25 October 2026, and live over HTTPS.** The repository `therealcreynold/duoalley-website` was
-created public and pushed; Pages was enabled from `main` at the root with the custom domain
-`duoalley.com`; the nine DNS records were set at Namecheap the same day; GitHub's certificate reached
-`approved` (covering `duoalley.com` and `www.duoalley.com`) within minutes and `https_enforced` was set;
-`scripts/check-live.sh` then printed 16 PASS and "clean" against the holding page. (Run in the first
+**DONE 25 October 2026 for duoalley.com, and live over HTTPS; MOVED to hingealley.com on 27 October
+2026.** The move is this repository's `CNAME` (now `hingealley.com`) plus steps 3, 5, 6 and 7 below run
+again for the new domain after the push; until GitHub's certificate covers hingealley.com,
+`scripts/check-live.sh` fails. What follows is the first setup, for duoalley.com. The repository
+`therealcreynold/duoalley-website` was created public and pushed; Pages was enabled from `main` at the
+root with the custom domain `duoalley.com`; the nine DNS records were set at Namecheap the same day;
+GitHub's certificate reached `approved` (covering `duoalley.com` and `www.duoalley.com`) within
+minutes and `https_enforced` was set; `scripts/check-live.sh` then printed 16 PASS and "clean" against the holding page. (Run in the first
 minute after the certificate was approved, it failed twice, on `www` and on one connection, while the
 certificate reached GitHub's edge; a minute later it was clean.) The steps stay because they are how
 the site gets rebuilt. Read what is there before redoing anything. In order:
@@ -237,9 +244,9 @@ the site gets rebuilt. Read what is there before redoing anything. In order:
        gh api -X POST repos/therealcreynold/duoalley-website/pages \
          -f 'source[branch]=main' -f 'source[path]=/'
 
-3. **The custom domain** `duoalley.com` (the committed `CNAME` agrees):
+3. **The custom domain** `hingealley.com` (the committed `CNAME` agrees):
 
-       gh api -X PUT repos/therealcreynold/duoalley-website/pages -f cname=duoalley.com
+       gh api -X PUT repos/therealcreynold/duoalley-website/pages -f cname=hingealley.com
 
 4. **The DNS** above, at Namecheap.
 5. **Wait for GitHub's certificate** to reach `approved`, covering the apex and `www`:
@@ -260,7 +267,7 @@ Network, read only. It holds that the four pages, `app-ads.txt`, `robots.txt`, `
 stylesheet are 200 over HTTPS at their trailing slash URLs and the bare paths 301 to them; that the
 home and privacy pages and every icon are byte for byte this repository's; that `app-ads.txt` is
 `text/plain` with `OWNERDOMAIN` and the seller line; that `http://`, `https://www` and `http://www` all
-land on `https://duoalley.com/`; that an unknown path is a 404 with the styled page; that `README.md`,
+land on `https://hingealley.com/`; that an unknown path is a 404 with the styled page; that `README.md`,
 `scripts/`, `_config.yml` and `.gitignore` are **not** served; and that the page agrees with the App
 Store: it asks Apple's public lookup for Apple ID `6826694965` and fails if the game is on sale while
 the page still says "Coming to the App Store." or has no link to it, and if the page links to a store

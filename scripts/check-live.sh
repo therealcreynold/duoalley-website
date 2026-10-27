@@ -3,7 +3,7 @@
 #
 #     scripts/check-live.sh
 #
-# Network, read only: curl against https://duoalley.com and one App Store lookup. Changes nothing. Run
+# Network, read only: curl against https://hingealley.com and one App Store lookup. Changes nothing. Run
 # it after every push, after any change to _config.yml, and on the day the game goes on sale. Every
 # line it prints is PASS or FAIL; it exits non-zero on any FAIL. (Run in the first minute after a
 # push, GitHub Pages may still be deploying: give it that minute before believing a FAIL.)
@@ -26,7 +26,7 @@
 #     game is on sale and fails while the home page disagrees.
 set -uo pipefail
 SITE="$(cd "$(dirname "$0")/.." && pwd)"
-DOMAIN="duoalley.com"
+DOMAIN="hingealley.com"
 HOST="https://$DOMAIN"
 APPLE_ID="6826694965"          # App Store Connect's Apple ID for this game
 NOT_FOUND="Gutter ball"        # the 404 page's heading

@@ -1,4 +1,4 @@
-# duoalley.com
+# hingealley.com
 #
 # Everything here is meant to be found, and app-ads.txt in particular MUST stay crawlable: advertising
 # networks reach it by following the App Store listing's Marketing URL, and a Disallow here would
@@ -7,4 +7,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://duoalley.com/sitemap.xml
+Sitemap: https://hingealley.com/sitemap.xml
