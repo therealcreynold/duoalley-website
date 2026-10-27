@@ -100,9 +100,12 @@ this site is drawn from **whatever `app/DuoAlley/AppIcon.icon` the game has comm
 
     scripts/make-icons.sh            # or: scripts/make-icons.sh /path/to/the/game/repository
 
-It reads `icon.json` for the fill colour and the layer order, stacks the light appearance's full-frame
-layers (backdrop, plate, ramp, ball) on that fill with headless Brave, scales them with sips, drops the
-alpha channel, and writes `assets/icon-{32,96,180,512}.png` plus `scripts/icon-source.txt`, the SHA-256
+The game's `node Scripts/compose-creative.mjs` runs it for you after it redraws the store's copies, so in
+practice the one command for every copy of the icon, store and site, is that one.
+
+It draws the icon with the game's own renderer, `swift run -c release alley-art marketing-icon` (the one
+that draws the store's marketing icon, so the site and the store cannot drift apart), scales it with
+sips, drops the alpha channel, and writes `assets/icon-{32,96,180,512}.png` plus `scripts/icon-source.txt`, the SHA-256
 of every file it read. It refuses while `AppIcon.icon` has uncommitted changes in the game repository
 (edited, staged or untracked), and the lint hashes the **HEAD** blobs through git, never the working
 tree, so an icon nobody has committed can neither be drawn nor pass. Icon Composer's glass and drop shadows are not drawn: what comes out is the flat

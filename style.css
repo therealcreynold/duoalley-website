@@ -1,7 +1,8 @@
 /* Duo Alley: the whole site's styles.
 
    One file for every page. The only pictures are the app icon, drawn by scripts/make-icons.sh from the
-   icon the game has committed; everything else is the family's arcade cabinet drawn in CSS, on a
+   icon the game has committed, and three of the store's own screenshots, copied by
+   scripts/make-shots.sh; everything else is the family's arcade cabinet drawn in CSS, on a
    boardwalk at night. A plum navy cabinet, a row of
    warm bulbs lit and unlit in turn, the name in neon (DUO in the family's cyan, ALLEY in boardwalk
    pink), and a strip of maple lane edged in brass along the bottom of the machine.
@@ -260,4 +261,20 @@ footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 2
     transition-duration: .001ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ---- The store's screenshots ------------------------------------------------------------- */
+
+/* Each is the store's framed screenshot, caption and all, scaled to the column and never past its own
+   size, so a phone is never pushed into sideways scrolling. */
+.shot { margin: 0; }
+.shot img { display: block; max-width: 100%; height: auto; margin-inline: auto; border-radius: 18px; }
+.hero-shot { margin-top: clamp(28px, 6vw, 48px); }
+.hero-shot img { width: 640px; box-shadow: 0 18px 60px rgba(0,0,0,.45); }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: end; margin-top: 24px; }
+.pair img { width: 100%; }
+.shot figcaption { margin-top: 8px; text-align: center; font-size: 15px; color: var(--ink-soft); }
+@media (max-width: 560px) {
+  .pair { grid-template-columns: 1fr; }
+  .pair img { width: min(100%, 360px); }
 }

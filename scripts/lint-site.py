@@ -29,8 +29,8 @@ touches the network. What it fails on, and why each one is here:
   - a <script>, an inline event handler, an iframe, a form, a web font, an @import, inline styles, any
     url( in the stylesheet, or anything loaded from another host. The site runs no code and fetches
     nothing from anybody else.
-  - a picture that is not one of the icons in assets/, an <img> without alt or whose width and height
-    are not the file's, a favicon or home screen icon missing from a page or not the size it claims,
+  - a picture that is not one of the icons or the store screenshots in assets/, an <img> without alt or
+    whose width and height are not the file's, a screenshot with an alpha channel, a favicon or home screen icon missing from a page or not the size it claims,
     and an icon with an alpha channel.
   - a link to a host not on LINK_HOSTS (an App Store link is refused until the game is on sale: add
     apps.apple.com then, README.md "Launch day"), a plain http link, a mailto that is not the contact
@@ -55,6 +55,8 @@ touches the network. What it fails on, and why each one is here:
     git, never the working tree): scripts/icon-source.txt records
     the files scripts/make-icons.sh drew from, and a difference means the site shows an icon the game
     no longer has. Run scripts/make-icons.sh.
+  - the screenshots against the game's committed framed store screenshots, the same way:
+    scripts/shot-source.txt records what scripts/make-shots.sh copied. Run scripts/make-shots.sh.
   - the privacy URL compiled into the app (MoneyLinks.privacyPolicy) and the Support and Marketing
     URLs in docs/APP-STORE-LISTING.md name pages this site has.
 """
@@ -76,7 +78,9 @@ CONTACT = "info@crindustries.xyz"
 PAGES = ["index.html", "support/index.html", "privacy/index.html", "terms/index.html"]
 ICONS = {"assets/icon-32.png": 32, "assets/icon-96.png": 96, "assets/icon-180.png": 180,
          "assets/icon-512.png": 512}
-PUBLISHED = set(PAGES) | set(ICONS) | {"404.html", "style.css", "CNAME", "robots.txt", "sitemap.xml",
+# The store's own framed screenshots, copied by scripts/make-shots.sh (JPEG, no alpha).
+SHOTS = {"assets/shots/hundred.jpg", "assets/shots/closed.jpg", "assets/shots/phone.jpg"}
+PUBLISHED = set(PAGES) | set(ICONS) | SHOTS | {"404.html", "style.css", "CNAME", "robots.txt", "sitemap.xml",
                                        "app-ads.txt"}
 NOT_PUBLISHED = {"scripts", "README.md"}            # must agree with _config.yml's exclude list
 TEXT_SUFFIXES = {".html", ".css", ".txt", ".xml", ".yml", ".md", ".py", ".sh", ""}
@@ -236,6 +240,10 @@ def check_published(problems: list[str]) -> None:
             problems.append(f"{name} is {info[0]} x {info[1]}, expected {size} x {size}")
         if info[2]:
             problems.append(f"{name} has an alpha channel (scripts/make-icons.sh writes opaque files)")
+    for name in sorted(SHOTS):
+        info = png_info(ROOT / name) if (ROOT / name).is_file() else None
+        if info and info[2]:
+            problems.append(f"{name} has an alpha channel (scripts/make-shots.sh writes JPEG)")
 
 
 def check_pages(problems: list[str]) -> None:
@@ -264,7 +272,7 @@ def check_pages(problems: list[str]) -> None:
                 problems.append(f"{name}: a <{banned}> (the site runs no code and collects nothing)")
         for banned in ("picture", "svg", "video", "audio", "canvas"):
             if banned in names:
-                problems.append(f"{name}: a <{banned}> (the only pictures are the icons in assets/)")
+                problems.append(f"{name}: a <{banned}> (the only pictures are the icons and screenshots in assets/)")
         metas = {a.get("name") or a.get("property"): a.get("content", "") for t, a in tags if t == "meta"}
         if "viewport" not in metas:
             problems.append(f"{name}: no viewport meta")
@@ -350,8 +358,8 @@ def check_pages(problems: list[str]) -> None:
                     problems.append(f"{name}: a relative URL {url!r} (use root relative: the 404 is served at any path)")
             if tag == "img":
                 src = a.get("src", "")
-                if src.lstrip("/") not in ICONS:
-                    problems.append(f"{name}: <img {src}> is not one of the icons in assets/")
+                if src.lstrip("/") not in ICONS and src.lstrip("/") not in SHOTS:
+                    problems.append(f"{name}: <img {src}> is not one of the icons or screenshots in assets/")
                 target = resolve(src)
                 info = png_info(target) if target is not None else None
                 declared = (a.get("width"), a.get("height"))
@@ -468,6 +476,33 @@ def check_icon_source(problems: list[str], notes: list[str]) -> None:
         notes.append("the icons were drawn from the game's committed AppIcon.icon (HEAD)")
 
 
+def check_shot_source(problems: list[str], notes: list[str]) -> None:
+    record = ROOT / "scripts" / "shot-source.txt"
+    if not record.is_file():
+        problems.append("scripts/shot-source.txt is missing: run scripts/make-shots.sh")
+        return
+    recorded = {}
+    for line in record.read_text().splitlines():
+        if line.strip() and not line.startswith("#"):
+            digest, name = line.split(None, 1)
+            recorded[name.strip()] = digest
+    if not (GAME / ".git").exists():
+        notes.append(f"SKIP the screenshots against the game's committed ones: {GAME} is not here")
+        return
+    try:
+        current = {n: hashlib.sha256(subprocess.run(["git", "-C", str(GAME), "show", f"HEAD:{n}"], check=True,
+                                                     capture_output=True).stdout).hexdigest() for n in recorded}
+    except (OSError, subprocess.CalledProcessError) as error:
+        problems.append(f"cannot read the game's committed screenshots from git: {error}")
+        return
+    changed = sorted(n for n in recorded if recorded[n] != current.get(n))
+    if changed:
+        problems.append("the site's screenshots were made from pictures the game no longer has at HEAD "
+                        f"({', '.join(changed)}): run scripts/make-shots.sh, look, and commit")
+    else:
+        notes.append("the screenshots were made from the game's committed framed screenshots (HEAD)")
+
+
 def check_game_urls(problems: list[str], notes: list[str]) -> None:
     links = GAME / "app" / "DuoAlley" / "Kit" / "Ads" / "AdsSettingsSection.swift"
     listing = GAME / "docs" / "APP-STORE-LISTING.md"
@@ -553,6 +588,7 @@ def main() -> int:
     check_contracts(problems)
     check_policy(problems, notes)
     check_icon_source(problems, notes)
+    check_shot_source(problems, notes)
     check_game_urls(problems, notes)
     if "--require-game" in sys.argv:
         # Release gating: a missing game repository is a failure, never a skipped comparison.

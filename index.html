@@ -27,7 +27,8 @@
      HexPanel.swift, the menu, MoneyCards, RemoveAdsStore.whatItBuys, AdPolicy) and docs/DECISIONS.md,
      never from the brief. No price (the App Store shows it), no date, no App Store link until the game
      is on sale (scripts/check-live.sh fails when that changes and this page has not). The icon is
-     whatever AppIcon.icon the game has committed, drawn by scripts/make-icons.sh. -->
+     whatever AppIcon.icon the game has committed, drawn by scripts/make-icons.sh; the three pictures
+     of the game are the store's own framed screenshots, copied by scripts/make-shots.sh. -->
 </head>
 <body>
 <a class="skip" href="#main">Skip to the page</a>
@@ -43,6 +44,9 @@
     ball from the half on the table. It hops the fold and climbs the ramp. Nine balls. Chase the 100s.</p>
     <p class="pill">Designed for iPhone Duo</p>
     <p class="status"><b>Coming to the App Store.</b></p>
+    <figure class="shot hero-shot">
+      <img src="/assets/shots/hundred.jpg" width="640" height="909" alt="A phone folded like a laptop, the arcade cabinet standing on the raised half and the maple lane on the half below. A ball has just dropped into the right corner pocket, 100! is lit across the brass plate and the bulbs chase pink.">
+    </figure>
   </div>
   <div class="lights" aria-hidden="true"></div>
   <div class="ground" aria-hidden="true"></div>
@@ -75,6 +79,16 @@
   its side like a book, or closed on the outside screen, it is the same game, and a frame you pause
   by opening or closing the phone waits for you. It plays on other iPhones too, with the fold drawn
   as a brass rail across the middle.</p>
+  <div class="pair">
+    <figure class="shot">
+      <img src="/assets/shots/closed.jpg" width="560" height="814" loading="lazy" alt="The closed phone playing on its outside screen: the cabinet above a brass rail where the fold would be, and the lane below it.">
+      <figcaption>Closed, on the outside screen</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="/assets/shots/phone.jpg" width="400" height="869" loading="lazy" alt="An ordinary phone playing the same game, the brass rail drawn across the middle of the screen where a fold would be.">
+      <figcaption>A phone without a fold</figcaption>
+    </figure>
+  </div>
 </section>
 
 <section class="feature" aria-labelledby="made">

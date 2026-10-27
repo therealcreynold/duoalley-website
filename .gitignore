@@ -2,3 +2,8 @@
 # repository that _config.yml does not exclude, so a committed .DS_Store would be a public binary
 # listing the names of everything in the folder.
 .DS_Store
+
+# Python writes compiled copies of scripts/lint-site.py beside it when it runs. The repository is public
+# and _config.yml keeps scripts/ off the site, but a compiled binary has no business in either.
+__pycache__/
+*.pyc
